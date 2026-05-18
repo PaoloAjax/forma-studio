@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forma — Paolo van der Linden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --terra: #D85A30;
+      --terra-light: #FAECE7;
+      --terra-dark: #712B13;
+      --ink: #1a1a18;
+      --ink-soft: #5F5E5A;
+      --bg: #FAFAF8;
+      --border: rgba(0,0,0,0.1);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--ink); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 3rem;
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .logo { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: 2px; color: var(--ink); text-decoration: none; }
+    .logo span { color: var(--terra); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { font-size: 13px; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.3px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-size: 13px; background: var(--ink); color: var(--bg);
+      border: none; padding: 9px 20px; border-radius: 4px;
+      cursor: pointer; font-family: var(--font-body); letter-spacing: 0.3px;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--terra); }
+
+    /* HERO */
+    .hero {
+      padding: 7rem 3rem 6rem;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 11px; color: var(--ink-soft);
+      letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 2.5rem;
+    }
+    .eyebrow-line { width: 36px; height: 0.5px; background: var(--terra); }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 8vw, 80px);
+      font-weight: 400; line-height: 1.05;
+      letter-spacing: -1px; color: var(--ink);
+      margin-bottom: 2rem;
+    }
+    .hero h1 em { color: var(--terra); font-style: italic; }
+    .hero-sub {
+      font-size: 16px; color: var(--ink-soft); line-height: 1.8;
+      max-width: 420px; margin-bottom: 3rem; font-weight: 300;
+    }
+    .hero-btns { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .btn-dark {
+      background: var(--ink); color: var(--bg);
+      border: none; padding: 13px 26px; border-radius: 4px;
+      font-size: 14px; cursor: pointer; font-family: var(--font-body);
+      transition: background 0.2s;
+    }
+    .btn-dark:hover { background: var(--terra); }
+    .btn-ghost {
+      background: transparent; color: var(--ink-soft);
+      border: 0.5px solid var(--border); padding: 13px 26px; border-radius: 4px;
+      font-size: 14px; cursor: pointer; font-family: var(--font-body);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1rem 0; overflow: hidden;
+    }
+    .marquee-track { display: flex; gap: 3rem; white-space: nowrap; animation: marquee 20s linear infinite; }
+    .marquee-track span { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink-soft); flex-shrink: 0; }
+    .marquee-track span.dot { color: var(--terra); }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* SECTIONS */
+    section { padding: 5rem 3rem; }
+    .section-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 400; letter-spacing: -0.5px; line-height: 1.15; }
+
+    /* WERK */
+    .work-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+    .work-link { font-size: 13px; color: var(--terra); text-decoration: none; letter-spacing: 0.3px; }
+    .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .work-card {
+      border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      background: white;
+    }
+    .work-card:hover { border-color: var(--terra); transform: translateY(-2px); }
+    .work-thumb {
+      width: 100%; aspect-ratio: 16/10;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 32px; font-style: italic; color: var(--ink-soft);
+    }
+    .work-thumb.a { background: var(--terra-light); color: var(--terra-dark); }
+    .work-thumb.b { background: #2C2C2A; color: #888780; }
+    .work-thumb.c { background: #F1EFE8; color: var(--ink-soft); }
+    .work-body { padding: 1.25rem; }
+    .work-tag { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+    .work-title { font-size: 15px; font-weight: 500; }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-body { font-size: 15px; color: var(--ink-soft); line-height: 1.8; font-weight: 300; }
+    .about-body p + p { margin-top: 1rem; }
+    .about-stats { display: flex; flex-direction: column; }
+    .stat-row { padding: 1.25rem 0; border-bottom: 0.5px solid var(--border); }
+    .stat-row:first-child { border-top: 0.5px solid var(--border); }
+    .stat-num { font-family: var(--font-display); font-size: 40px; color: var(--terra); line-height: 1; }
+    .stat-desc { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+    /* PROCESS */
+    .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 2.5rem; border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .process-step { padding: 1.75rem 1.5rem; border-right: 0.5px solid var(--border); background: white; }
+    .process-step:last-child { border-right: none; }
+    .step-num { font-size: 11px; letter-spacing: 2px; color: var(--terra); margin-bottom: 1rem; }
+    .step-title { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; }
+    .step-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; font-weight: 300; }
+
+    /* CTA */
+    .cta-bar {
+      margin: 0 3rem 5rem;
+      background: var(--ink); border-radius: 8px;
+      padding: 3.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;
+    }
+    .cta-text { font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); font-weight: 400; color: var(--bg); line-height: 1.2; max-width: 420px; }
+    .cta-text em { color: var(--terra); font-style: italic; }
+    .btn-terra {
+      background: var(--terra); color: white; border: none;
+      padding: 14px 28px; border-radius: 4px;
+      font-size: 14px; cursor: pointer; font-family: var(--font-body);
+      white-space: nowrap; transition: background 0.2s;
+    }
+    .btn-terra:hover { background: var(--terra-dark); }
+
+    /* FOOTER */
+    footer {
+      padding: 1.5rem 3rem;
+      border-top: 0.5px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--ink-soft); flex-wrap: wrap; gap: 1rem;
+      letter-spacing: 0.3px;
+    }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--terra); }
+    .footer-links { display: flex; gap: 2rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 4rem 1.5rem; }
+      section { padding: 3.5rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .cta-bar { margin: 0 1.5rem 3rem; padding: 2rem; }
+      footer { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo" href="#">Forma<span>.</span></a>
+    <div class="nav-links">
+      <a href="#werk">Werk</a>
+      <a href="#over">Over</a>
+      <a href="#proces">Proces</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Project starten</button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      Paolo van der Linden — Design Studio
+    </div>
+    <h1>Design dat <em>werkt.</em><br>Voor bedrijven<br>die verder denken.</h1>
+    <p class="hero-sub">Eenmansstudio gespecialiseerd in identiteit en digitale vormgeving voor ambitieuze ondernemers. Kwaliteit boven kwantiteit — altijd.</p>
+    <div class="hero-btns">
+      <button class="btn-dark" onclick="document.getElementById('werk').scrollIntoView({behavior:'smooth'})">Bekijk mijn werk</button>
+      <button class="btn-ghost" onclick="document.getElementById('over').scrollIntoView({behavior:'smooth'})">Over Forma</button>
+    </div>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Webdesign</span><span class="dot">·</span>
+      <span>Branding</span><span class="dot">·</span>
+      <span>Strategie</span><span class="dot">·</span>
+      <span>UI/UX</span><span class="dot">·</span>
+      <span>Identiteit</span><span class="dot">·</span>
+      <span>Typografie</span><span class="dot">·</span>
+      <span>Webdesign</span><span class="dot">·</span>
+      <span>Branding</span><span class="dot">·</span>
+      <span>Strategie</span><span class="dot">·</span>
+      <span>UI/UX</span><span class="dot">·</span>
+      <span>Identiteit</span><span class="dot">·</span>
+      <span>Typografie</span><span class="dot">·</span>
+      <span>Webdesign</span><span class="dot">·</span>
+      <span>Branding</span><span class="dot">·</span>
+      <span>Strategie</span><span class="dot">·</span>
+      <span>UI/UX</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <section id="werk">
+    <div class="work-header">
+      <div>
+        <div class="section-label">Geselecteerd werk</div>
+        <h2 class="section-title">Recente projecten</h2>
+      </div>
+      <a class="work-link" href="#">Alle projecten →</a>
+    </div>
+    <div class="work-grid">
+      <div class="work-card">
+        <div class="work-thumb a">Nova</div>
+        <div class="work-body">
+          <div class="work-tag">Accountancy · Webdesign</div>
+          <div class="work-title">Nova Accountants — Website redesign</div>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb b">Meridian</div>
+        <div class="work-body">
+          <div class="work-tag">Fintech · Branding</div>
+          <div class="work-title">Meridian Finance — Merkidentiteit</div>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="work-thumb c">Kern</div>
+        <div class="work-body">
+          <div class="work-tag">Vastgoed · UI/UX</div>
+          <div class="work-title">Kern Makelaars — Digitale strategie</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="over" style="border-top: 0.5px solid var(--border);">
+    <div class="about-grid">
+      <div>
+        <div class="section-label">Over Forma</div>
+        <h2 class="section-title" style="margin-bottom: 1.5rem;">Design met een<br>financieel fundament.</h2>
+        <div class="about-body">
+          <p>Ik ben Paolo — designer met een achtergrond in de accountancy. Dat betekent dat ik niet alleen mooie dingen maak, maar ook begrijp wat jouw klant nodig heeft om te converteren.</p>
+          <p>Geen grote bureaus, geen junior stagiairs. Jij werkt direct met mij samen, van eerste gesprek tot livegang.</p>
+          <p>Geboren in Italië, opgegroeid in Nederland. Die twee werelden — Italiaanse esthetiek en Nederlandse nuchterheid — zie je terug in elk project.</p>
+        </div>
+      </div>
+      <div class="about-stats">
+        <div class="stat-row">
+          <div class="stat-num">40+</div>
+          <div class="stat-desc">Projecten afgerond</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num">8 jr</div>
+          <div class="stat-desc">Ervaring in finance & design</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-num">100%</div>
+          <div class="stat-desc">Persoonlijk contact, altijd</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proces" style="border-top: 0.5px solid var(--border);">
+    <div class="section-label">Werkwijze</div>
+    <h2 class="section-title">Zo werk ik.</h2>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Kennismaking</div>
+        <div class="step-desc">Gratis gesprek van 30 min om jouw doelen en visie te begrijpen.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Strategie</div>
+        <div class="step-desc">Positionering, doelgroep en structuur — voordat er één pixel gezet wordt.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Design</div>
+        <div class="step-desc">Iteratief proces met wekelijkse updates en jouw feedback centraal.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Live & door</div>
+        <div class="step-desc">Livegang + overdracht. Optioneel maandelijks onderhoudspakket.</div>
+      </div>
+    </div>
+  </section>
+
+  <div id="contact" class="cta-bar">
+    <div class="cta-text">Klaar om samen iets <em>bijzonders</em> te bouwen?</div>
+    <a href="mailto:paolo@forma.studio">
+      <button class="btn-terra">Gesprek inplannen →</button>
+    </a>
+  </div>
+
+  <footer>
+    <a class="logo" href="#" style="font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; letter-spacing: 2px; color: var(--ink); text-decoration: none;">Forma<span style="color: var(--terra);">.</span></a>
+    <div>Amsterdam · Milano · 2026</div>
+    <div class="footer-links">
+      <a href="#">LinkedIn</a>
+      <a href="#">Instagram</a>
+      <a href="mailto:paolo@forma.studio">paolo@forma.studio</a>
+    </div>
+  </footer>
+
+</body>
+</html>
