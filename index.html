@@ -5,173 +5,360 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Forma — Paolo van der Linden</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
-      --terra: #D85A30; --terra-light: #FAECE7; --terra-dark: #712B13;
-      --ink: #1a1a18; --ink-soft: #5F5E5A; --bg: #FAFAF8;
-      --border: rgba(0,0,0,0.1);
+      --terra: #C4552A;
+      --terra-light: #F5EAE3;
+      --terra-dark: #5C2610;
+      --ink: #18180F;
+      --ink-soft: #6B6A62;
+      --ink-faint: #A8A79F;
+      --bg: #F8F6F1;
+      --bg-warm: #F0ECE3;
+      --border: rgba(24,24,15,0.1);
+      --border-strong: rgba(24,24,15,0.2);
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
-    body { font-family: var(--font-body); background: var(--bg); color: var(--ink); cursor: none; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: none;
+      /* subtle paper texture */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+    }
 
     /* CUSTOM CURSOR */
-    .cursor {
-      position: fixed; top: 0; left: 0;
-      width: 8px; height: 8px;
+    .cursor-dot {
+      position: fixed; width: 5px; height: 5px;
       background: var(--terra); border-radius: 50%;
       pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+      transition: width 0.25s, height 0.25s, background 0.25s;
     }
-    .cursor.expanded {
-      width: 36px; height: 36px;
-      background: transparent;
+    .cursor-ring {
+      position: fixed; width: 32px; height: 32px;
       border: 1px solid var(--terra);
+      border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s cubic-bezier(.16,1,.3,1), height 0.4s cubic-bezier(.16,1,.3,1), opacity 0.3s;
+      opacity: 0.5;
     }
+    .cursor-ring.hover { width: 52px; height: 52px; opacity: 1; }
 
-    /* FADE IN ANIMATIONS */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .fade-up.delay-1 { transition-delay: 0.1s; }
-    .fade-up.delay-2 { transition-delay: 0.2s; }
-    .fade-up.delay-3 { transition-delay: 0.35s; }
-    .fade-up.delay-4 { transition-delay: 0.5s; }
+    /* FADE UP */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1); }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.d1 { transition-delay: 0.1s; }
+    .fade-up.d2 { transition-delay: 0.22s; }
+    .fade-up.d3 { transition-delay: 0.36s; }
+    .fade-up.d4 { transition-delay: 0.52s; }
 
     /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
-      padding: 1.2rem 3rem; background: var(--bg);
-      border-bottom: 0.5px solid var(--border);
+      padding: 0 3rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
-    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: 2px; color: var(--ink); text-decoration: none; }
-    .logo span { color: var(--terra); }
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-links a { font-size: 13px; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.3px; transition: color 0.2s; }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 64px;
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 500;
+      letter-spacing: 5px; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+    }
+    .logo em { color: var(--terra); font-style: normal; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      font-size: 11px; color: var(--ink-soft);
+      text-decoration: none; letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
     .nav-links a:hover { color: var(--ink); }
-    .nav-cta { font-size: 13px; background: var(--ink); color: var(--bg); border: none; padding: 9px 20px; border-radius: 4px; cursor: none; font-family: var(--font-body); transition: background 0.2s; }
-    .nav-cta:hover { background: var(--terra); }
+    .nav-cta {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--border-strong);
+      padding: 9px 20px;
+      cursor: none; font-family: var(--font-body);
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .nav-cta:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
     /* HERO */
-    .hero { padding: 7rem 3rem 6rem; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .hero-eyebrow { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--ink-soft); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 2.5rem; }
-    .eyebrow-line { width: 36px; height: 0.5px; background: var(--terra); }
-    .hero h1 { font-family: var(--font-display); font-size: clamp(52px, 8vw, 80px); font-weight: 400; line-height: 1.05; letter-spacing: -1px; color: var(--ink); margin-bottom: 2rem; }
-    .hero h1 em { color: var(--terra); font-style: italic; }
-    .hero-sub { font-size: 16px; color: var(--ink-soft); line-height: 1.8; max-width: 420px; margin-bottom: 3rem; font-weight: 300; }
-    .hero-btns { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-    .btn-dark { background: var(--ink); color: var(--bg); border: none; padding: 13px 26px; border-radius: 4px; font-size: 14px; cursor: none; font-family: var(--font-body); transition: background 0.2s; }
-    .btn-dark:hover { background: var(--terra); }
-    .btn-ghost { background: transparent; color: var(--ink-soft); border: 0.5px solid var(--border); padding: 13px 26px; border-radius: 4px; font-size: 14px; cursor: none; font-family: var(--font-body); transition: border-color 0.2s, color 0.2s; }
-    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+    .hero-wrap { border-bottom: 1px solid var(--border); }
+    .hero {
+      padding: 8rem 3rem 7rem;
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end;
+    }
+    .hero-left {}
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 10px; color: var(--ink-faint);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3rem;
+    }
+    .eyebrow-line { width: 28px; height: 1px; background: var(--terra); flex-shrink: 0; }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 7vw, 88px);
+      font-weight: 300; line-height: 1.0;
+      letter-spacing: -1.5px; color: var(--ink);
+    }
+    .hero h1 em {
+      color: var(--terra); font-style: italic;
+      font-weight: 300;
+    }
+    .hero-right { padding-bottom: 0.5rem; }
+    .hero-sub {
+      font-size: 15px; color: var(--ink-soft); line-height: 1.85;
+      margin-bottom: 2.5rem; font-weight: 300;
+      border-left: 1px solid var(--terra);
+      padding-left: 1.25rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--ink); color: var(--bg);
+      border: 1px solid var(--ink);
+      padding: 12px 24px;
+      cursor: none; font-family: var(--font-body);
+      transition: background 0.25s, color 0.25s;
+    }
+    .btn-primary:hover { background: var(--terra); border-color: var(--terra); }
+    .btn-secondary {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      background: transparent; color: var(--ink-soft);
+      border: 1px solid var(--border);
+      padding: 12px 24px;
+      cursor: none; font-family: var(--font-body);
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .btn-secondary:hover { color: var(--ink); border-color: var(--ink); }
 
     /* MARQUEE */
-    .marquee-wrap { border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 1rem 0; overflow: hidden; }
-    .marquee-track { display: flex; gap: 3rem; white-space: nowrap; animation: marquee 20s linear infinite; }
-    .marquee-track span { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink-soft); flex-shrink: 0; }
+    .marquee-wrap {
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 0; overflow: hidden;
+      background: var(--bg-warm);
+    }
+    .marquee-track { display: flex; gap: 3rem; white-space: nowrap; animation: marquee 24s linear infinite; }
+    .marquee-track span { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-faint); flex-shrink: 0; }
     .marquee-track span.dot { color: var(--terra); }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     /* SECTIONS */
-    section { padding: 5rem 3rem; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .section-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.75rem; }
-    .section-title { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 400; letter-spacing: -0.5px; line-height: 1.15; }
+    .section-wrap { border-bottom: 1px solid var(--border); }
+    section { padding: 6rem 3rem; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--terra); }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 300; letter-spacing: -0.5px; line-height: 1.1;
+      color: var(--ink);
+    }
 
     /* WORK */
-    .work-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
-    .work-link { font-size: 13px; color: var(--terra); text-decoration: none; }
-    .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
-    .work-card { border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; cursor: none; transition: border-color 0.3s, box-shadow 0.3s; background: white; }
-    .work-card:hover { border-color: var(--terra); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-    .work-thumb-wrap { overflow: hidden; width: 100%; aspect-ratio: 16/10; }
+    .work-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+    .work-link {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--ink-soft); text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .work-link:hover { color: var(--terra); border-color: var(--terra); }
+    .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); }
+    .work-card {
+      cursor: none;
+      transition: background 0.3s;
+      border-right: 1px solid var(--border);
+      background: white;
+    }
+    .work-card:last-child { border-right: none; }
+    .work-card:hover { background: var(--bg); }
+    .work-thumb-wrap { overflow: hidden; width: 100%; aspect-ratio: 4/3; }
     .work-thumb {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 32px; font-style: italic; color: var(--ink-soft);
-      transition: transform 0.5s ease;
+      font-family: var(--font-display); font-size: 36px;
+      font-style: italic; font-weight: 300;
+      transition: transform 0.6s cubic-bezier(.16,1,.3,1);
     }
-    .work-card:hover .work-thumb { transform: scale(1.04); }
-    .work-thumb.a { background: var(--terra-light); color: var(--terra-dark); }
-    .work-thumb.b { background: #2C2C2A; color: #888780; }
-    .work-thumb.c { background: #F1EFE8; color: var(--ink-soft); }
-    .work-body { padding: 1.25rem; }
-    .work-tag { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
-    .work-title { font-size: 15px; font-weight: 500; }
+    .work-card:hover .work-thumb { transform: scale(1.05); }
+    .work-thumb.a { background: var(--terra-light); color: var(--terra); }
+    .work-thumb.b { background: #1E1E18; color: #6B6A62; }
+    .work-thumb.c { background: var(--bg-warm); color: var(--ink-soft); }
+    .work-body { padding: 1.5rem; border-top: 1px solid var(--border); }
+    .work-tag { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .work-title { font-family: var(--font-display); font-size: 18px; font-weight: 400; color: var(--ink); }
 
     /* ABOUT */
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-    .about-body { font-size: 15px; color: var(--ink-soft); line-height: 1.8; font-weight: 300; }
-    .about-body p + p { margin-top: 1rem; }
-    .about-pillars { display: flex; flex-direction: column; }
-    .pillar { padding: 1.5rem 0; border-bottom: 0.5px solid var(--border); transition: padding-left 0.3s ease; }
-    .pillar:first-child { border-top: 0.5px solid var(--border); }
-    .pillar:hover { padding-left: 8px; }
-    .pillar-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
-    .pillar-title span { color: var(--terra); font-size: 18px; transition: transform 0.3s ease; }
-    .pillar:hover .pillar-title span { transform: translateX(4px); }
-    .pillar-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; font-weight: 300; }
+    .about-grid { display: grid; grid-template-columns: 5fr 4fr; gap: 6rem; align-items: start; }
+    .about-intro { margin-bottom: 2.5rem; }
+    .about-body { font-size: 15px; color: var(--ink-soft); line-height: 1.9; font-weight: 300; }
+    .about-body p + p { margin-top: 1.25rem; }
+    .about-signature {
+      margin-top: 2.5rem;
+      font-family: var(--font-display);
+      font-size: 28px; font-style: italic; font-weight: 300;
+      color: var(--ink-faint);
+    }
+    .about-pillars { display: flex; flex-direction: column; padding-top: 0.5rem; }
+    .pillar {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: padding-left 0.4s cubic-bezier(.16,1,.3,1);
+    }
+    .pillar:first-child { border-top: 1px solid var(--border); }
+    .pillar:hover { padding-left: 10px; }
+    .pillar-num {
+      font-family: var(--font-display); font-size: 11px;
+      color: var(--terra); letter-spacing: 1px; margin-bottom: 6px;
+      font-style: italic;
+    }
+    .pillar-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 6px; letter-spacing: 0.2px; }
+    .pillar-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.65; font-weight: 300; }
 
     /* PROCESS */
-    .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 2.5rem; border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; }
-    .process-step { padding: 1.75rem 1.5rem; border-right: 0.5px solid var(--border); background: white; transition: background 0.3s; }
-    .process-step:hover { background: var(--terra-light); }
+    .process-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      margin-top: 3.5rem;
+      border: 1px solid var(--border);
+    }
+    .process-step {
+      padding: 2rem 1.75rem;
+      border-right: 1px solid var(--border);
+      background: white;
+      transition: background 0.3s;
+      position: relative;
+    }
+    .process-step::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--terra);
+      transition: width 0.4s cubic-bezier(.16,1,.3,1);
+    }
+    .process-step:hover::before { width: 100%; }
+    .process-step:hover { background: var(--bg); }
     .process-step:last-child { border-right: none; }
-    .step-num { font-size: 11px; letter-spacing: 2px; color: var(--terra); margin-bottom: 1rem; }
-    .step-title { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; }
-    .step-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; font-weight: 300; }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 32px; font-weight: 300; font-style: italic;
+      color: var(--terra-light); margin-bottom: 1.25rem;
+      line-height: 1;
+    }
+    .step-title { font-size: 13px; font-weight: 500; margin-bottom: 0.5rem; letter-spacing: 0.2px; }
+    .step-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
 
     /* CTA */
-    .cta-outer { max-width: 1100px; margin: 0 auto; padding: 0 3rem 5rem; }
-    .cta-bar { background: var(--ink); border-radius: 8px; padding: 3.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
-    .cta-text { font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); font-weight: 400; color: var(--bg); line-height: 1.2; max-width: 420px; }
+    .cta-outer { max-width: 1100px; margin: 0 auto; padding: 6rem 3rem; }
+    .cta-bar {
+      background: var(--ink);
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-bar::before {
+      content: 'F';
+      position: absolute; right: -20px; top: -40px;
+      font-family: var(--font-display);
+      font-size: 280px; font-style: italic; font-weight: 300;
+      color: rgba(255,255,255,0.03);
+      line-height: 1; pointer-events: none;
+    }
+    .cta-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; }
+    .cta-text {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 300; color: var(--bg);
+      line-height: 1.15; letter-spacing: -0.5px;
+    }
     .cta-text em { color: var(--terra); font-style: italic; }
-    .btn-terra { background: var(--terra); color: white; border: none; padding: 14px 28px; border-radius: 4px; font-size: 14px; cursor: none; font-family: var(--font-body); white-space: nowrap; transition: background 0.2s, transform 0.2s; }
-    .btn-terra:hover { background: var(--terra-dark); transform: translateY(-1px); }
+    .btn-terra {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      background: var(--terra); color: white;
+      border: 1px solid var(--terra);
+      padding: 14px 28px;
+      cursor: none; font-family: var(--font-body);
+      white-space: nowrap;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .btn-terra:hover { background: var(--terra-dark); border-color: var(--terra-dark); transform: translateY(-2px); }
 
     /* FOOTER */
-    footer { max-width: 1100px; margin: 0 auto; padding: 1.5rem 3rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--ink-soft); flex-wrap: wrap; gap: 1rem; }
+    .footer-wrap { border-top: 1px solid var(--border); background: var(--bg-warm); }
+    footer {
+      max-width: 1100px; margin: 0 auto;
+      padding: 2rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--ink-faint);
+      flex-wrap: wrap; gap: 1rem; letter-spacing: 1px;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 500;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+    }
+    .footer-logo em { color: var(--terra); font-style: normal; }
     footer a { color: inherit; text-decoration: none; transition: color 0.2s; }
     footer a:hover { color: var(--terra); }
     .footer-links { display: flex; gap: 2rem; }
 
-    /* SECTION BORDERS */
-    .section-bordered { border-top: 0.5px solid var(--border); }
-
     /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 2rem; padding: 5rem 1.5rem 4rem; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-card { border-right: none; border-bottom: 1px solid var(--border); }
+      .work-card:last-child { border-bottom: none; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .cta-bar { grid-template-columns: 1fr; }
+    }
     @media (max-width: 680px) {
       body { cursor: auto; }
-      .cursor { display: none; }
-      nav { padding: 1rem 1.5rem; }
+      .cursor-dot, .cursor-ring { display: none; }
+      nav { padding: 0 1.5rem; }
       .nav-links { display: none; }
-      .hero { padding: 4rem 1.5rem; }
-      section { padding: 3.5rem 1.5rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .cta-outer { padding: 0 1.5rem 3rem; }
-      .cta-bar { padding: 2rem; }
+      section { padding: 4rem 1.5rem; }
+      .cta-outer { padding: 4rem 1.5rem; }
+      .cta-bar { padding: 2.5rem; }
+      .process-grid { grid-template-columns: 1fr; }
+      .process-step { border-right: none; border-bottom: 1px solid var(--border); }
       footer { padding: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- CUSTOM CURSOR -->
-  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
   <nav>
     <div class="nav-inner">
-      <a class="logo" href="#">Forma<span>.</span></a>
+      <a class="logo" href="#">Forma<em>.</em></a>
       <div class="nav-links">
         <a href="#werk">Werk</a>
         <a href="#over">Over</a>
@@ -182,18 +369,24 @@
     </div>
   </nav>
 
-  <section class="hero">
-    <div class="hero-eyebrow fade-up delay-1">
-      <div class="eyebrow-line"></div>
-      Paolo van der Linden — Design Studio
+  <div class="hero-wrap">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow fade-up d1">
+          <div class="eyebrow-line"></div>
+          Paolo van der Linden — Design Studio
+        </div>
+        <h1 class="fade-up d2">Vormgeving die<br><em>blijft hangen.</em><br>Voor merken die<br>verder denken.</h1>
+      </div>
+      <div class="hero-right">
+        <p class="hero-sub fade-up d3">Eenmansstudio voor webdesign en merkidentiteit. Ik help ondernemers hun verhaal sterk en onderscheidend neer te zetten — online en offline.</p>
+        <div class="hero-btns fade-up d4">
+          <button class="btn-primary" onclick="document.getElementById('werk').scrollIntoView({behavior:'smooth'})">Bekijk mijn werk</button>
+          <button class="btn-secondary" onclick="document.getElementById('over').scrollIntoView({behavior:'smooth'})">Over Forma</button>
+        </div>
+      </div>
     </div>
-    <h1 class="fade-up delay-2">Vormgeving die<br><em>blijft hangen.</em><br>Voor merken die<br>verder denken.</h1>
-    <p class="hero-sub fade-up delay-3">Eenmansstudio voor webdesign en merkidentiteit. Ik help ondernemers hun verhaal sterk en onderscheidend neer te zetten — online en offline.</p>
-    <div class="hero-btns fade-up delay-4">
-      <button class="btn-dark" onclick="document.getElementById('werk').scrollIntoView({behavior:'smooth'})">Bekijk mijn werk</button>
-      <button class="btn-ghost" onclick="document.getElementById('over').scrollIntoView({behavior:'smooth'})">Over Forma</button>
-    </div>
-  </section>
+  </div>
 
   <div class="marquee-wrap">
     <div class="marquee-track">
@@ -216,145 +409,169 @@
     </div>
   </div>
 
-  <section id="werk">
-    <div class="work-header fade-up">
-      <div>
-        <div class="section-label">Geselecteerd werk</div>
-        <h2 class="section-title">Recente projecten</h2>
+  <div class="section-wrap">
+    <section id="werk">
+      <div class="work-header fade-up">
+        <div>
+          <div class="section-label">Geselecteerd werk</div>
+          <h2 class="section-title">Recente projecten</h2>
+        </div>
+        <a class="work-link" href="#">Alle projecten →</a>
       </div>
-      <a class="work-link" href="#">Alle projecten →</a>
-    </div>
-    <div class="work-grid">
-      <div class="work-card fade-up delay-1">
-        <div class="work-thumb-wrap">
-          <div class="work-thumb a">Volta</div>
+      <div class="work-grid">
+        <div class="work-card fade-up d1">
+          <div class="work-thumb-wrap">
+            <div class="work-thumb a">Volta</div>
+          </div>
+          <div class="work-body">
+            <div class="work-tag">Horeca · Webdesign</div>
+            <div class="work-title">Volta Amsterdam — Website & identiteit</div>
+          </div>
         </div>
-        <div class="work-body">
-          <div class="work-tag">Horeca · Webdesign</div>
-          <div class="work-title">Volta Amsterdam — Website & identiteit</div>
+        <div class="work-card fade-up d2">
+          <div class="work-thumb-wrap">
+            <div class="work-thumb b">Raam</div>
+          </div>
+          <div class="work-body">
+            <div class="work-tag">Vastgoed · Branding</div>
+            <div class="work-title">Raam Makelaars — Merkidentiteit</div>
+          </div>
+        </div>
+        <div class="work-card fade-up d3">
+          <div class="work-thumb-wrap">
+            <div class="work-thumb c">Veld</div>
+          </div>
+          <div class="work-body">
+            <div class="work-tag">Retail · UI/UX</div>
+            <div class="work-title">Veld Concept Store — Digitale strategie</div>
+          </div>
         </div>
       </div>
-      <div class="work-card fade-up delay-2">
-        <div class="work-thumb-wrap">
-          <div class="work-thumb b">Raam</div>
-        </div>
-        <div class="work-body">
-          <div class="work-tag">Vastgoed · Branding</div>
-          <div class="work-title">Raam Makelaars — Merkidentiteit</div>
-        </div>
-      </div>
-      <div class="work-card fade-up delay-3">
-        <div class="work-thumb-wrap">
-          <div class="work-thumb c">Veld</div>
-        </div>
-        <div class="work-body">
-          <div class="work-tag">Retail · UI/UX</div>
-          <div class="work-title">Veld Concept Store — Digitale strategie</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section id="over" class="section-bordered">
-    <div class="about-grid">
-      <div>
-        <div class="section-label fade-up">Over Forma</div>
-        <h2 class="section-title fade-up delay-1" style="margin-bottom: 1.5rem;">Design met<br>een scherp oog<br>voor detail.</h2>
-        <div class="about-body fade-up delay-2">
-          <p>Ik ben Paolo — designer met een analytische achtergrond en een passie voor esthetiek. Ik maak geen generieke websites maar doordachte digitale ervaringen die passen bij jouw merk en doelgroep.</p>
-          <p>Met wortels in Italië en Nederland combineer ik Italiaanse esthetiek met Nederlandse nuchterheid. Dat zie je terug in elk project.</p>
+  <div class="section-wrap">
+    <section id="over">
+      <div class="about-grid">
+        <div class="about-intro">
+          <div class="section-label fade-up">Over Forma</div>
+          <h2 class="section-title fade-up d1" style="margin-bottom: 2rem;">Design met<br>een scherp oog<br>voor detail.</h2>
+          <div class="about-body fade-up d2">
+            <p>Ik ben Paolo — designer met een analytische achtergrond en een passie voor esthetiek. Ik maak geen generieke websites maar doordachte digitale ervaringen die passen bij jouw merk en doelgroep.</p>
+            <p>Met wortels in Italië en Nederland combineer ik Italiaanse esthetiek met Nederlandse nuchterheid. Dat zie je terug in elk project.</p>
+          </div>
+          <div class="about-signature fade-up d3">Paolo van der Linden</div>
+        </div>
+        <div class="about-pillars fade-up d2">
+          <div class="pillar">
+            <div class="pillar-num">i.</div>
+            <div class="pillar-title">Persoonlijk contact — altijd</div>
+            <div class="pillar-desc">Geen bureau, geen tussenpersonen. Jij werkt direct met mij samen, van het eerste gesprek tot de livegang.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">ii.</div>
+            <div class="pillar-title">Vaste prijs, geen verrassingen</div>
+            <div class="pillar-desc">Vooraf duidelijke afspraken over wat je krijgt en wat het kost. Geen verborgen kosten achteraf.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-num">iii.</div>
+            <div class="pillar-title">Van idee tot live in 2 weken</div>
+            <div class="pillar-desc">Geen maandenlange trajecten. Ik werk snel en efficiënt zodat jij zo snel mogelijk online staat.</div>
+          </div>
         </div>
       </div>
-      <div class="about-pillars fade-up delay-2">
-        <div class="pillar">
-          <div class="pillar-title"><span>→</span> Persoonlijk contact — altijd</div>
-          <div class="pillar-desc">Geen bureau, geen tussenpersonen. Jij werkt direct met mij samen, van het eerste gesprek tot de livegang.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-title"><span>→</span> Vaste prijs, geen verrassingen</div>
-          <div class="pillar-desc">Vooraf duidelijke afspraken over wat je krijgt en wat het kost. Geen verborgen kosten achteraf.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-title"><span>→</span> Van idee tot live in 2 weken</div>
-          <div class="pillar-desc">Geen maandenlange trajecten. Ik werk snel en efficiënt zodat jij zo snel mogelijk online staat.</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section id="proces" class="section-bordered">
-    <div class="section-label fade-up">Werkwijze</div>
-    <h2 class="section-title fade-up delay-1">Zo werk ik.</h2>
-    <div class="process-grid fade-up delay-2">
-      <div class="process-step">
-        <div class="step-num">01</div>
-        <div class="step-title">Kennismaking</div>
-        <div class="step-desc">Gratis gesprek van 30 min om jouw merk, doelen en doelgroep te begrijpen.</div>
+  <div class="section-wrap">
+    <section id="proces">
+      <div class="section-label fade-up">Werkwijze</div>
+      <h2 class="section-title fade-up d1">Zo werk ik.</h2>
+      <div class="process-grid fade-up d2">
+        <div class="process-step">
+          <div class="step-num">01</div>
+          <div class="step-title">Kennismaking</div>
+          <div class="step-desc">Gratis gesprek van 30 min om jouw merk, doelen en doelgroep te begrijpen.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">02</div>
+          <div class="step-title">Strategie</div>
+          <div class="step-desc">Positionering, structuur en richting — voordat er één pixel gezet wordt.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">03</div>
+          <div class="step-title">Design</div>
+          <div class="step-desc">Iteratief proces met wekelijkse updates en jouw feedback centraal.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">04</div>
+          <div class="step-title">Live & door</div>
+          <div class="step-desc">Livegang + overdracht. Optioneel maandelijks onderhoudspakket.</div>
+        </div>
       </div>
-      <div class="process-step">
-        <div class="step-num">02</div>
-        <div class="step-title">Strategie</div>
-        <div class="step-desc">Positionering, structuur en richting — voordat er één pixel gezet wordt.</div>
-      </div>
-      <div class="process-step">
-        <div class="step-num">03</div>
-        <div class="step-title">Design</div>
-        <div class="step-desc">Iteratief proces met wekelijkse updates en jouw feedback centraal.</div>
-      </div>
-      <div class="process-step">
-        <div class="step-num">04</div>
-        <div class="step-title">Live & door</div>
-        <div class="step-desc">Livegang + overdracht. Optioneel maandelijks onderhoudspakket.</div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
   <div id="contact" class="cta-outer">
     <div class="cta-bar fade-up">
-      <div class="cta-text">Klaar om samen iets <em>bijzonders</em> te bouwen?</div>
+      <div>
+        <div class="cta-label">Volgende stap</div>
+        <div class="cta-text">Klaar om samen iets <em>bijzonders</em> te bouwen?</div>
+      </div>
       <a href="mailto:paolo@byforma.nl">
         <button class="btn-terra">Gesprek inplannen →</button>
       </a>
     </div>
   </div>
 
-  <footer>
-    <a class="logo" href="#" style="font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; letter-spacing: 2px; color: var(--ink); text-decoration: none;">Forma<span style="color: var(--terra);">.</span></a>
-    <div>Amsterdam · Milano · 2026</div>
-    <div class="footer-links">
-      <a href="#">LinkedIn</a>
-      <a href="#">Instagram</a>
-      <a href="mailto:paolo@byforma.nl">paolo@byforma.nl</a>
-    </div>
-  </footer>
+  <div class="footer-wrap">
+    <footer>
+      <a class="footer-logo" href="#">Forma<em>.</em></a>
+      <div>Amsterdam · Milano · 2026</div>
+      <div class="footer-links">
+        <a href="#">LinkedIn</a>
+        <a href="#">Instagram</a>
+        <a href="mailto:paolo@byforma.nl">paolo@byforma.nl</a>
+      </div>
+    </footer>
+  </div>
 
   <script>
-    // CUSTOM CURSOR
-    const cursor = document.getElementById('cursor');
+    // DUAL CURSOR
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
     document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top = my + 'px';
     });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
     document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
     });
 
-    // FADE IN ON SCROLL
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-
+    // SCROLL FADE
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Trigger hero immediately
-    document.querySelectorAll('.hero .fade-up').forEach(el => {
-      setTimeout(() => el.classList.add('visible'), 100);
-    });
+    // HERO IMMEDIATE
+    setTimeout(() => {
+      document.querySelectorAll('.hero .fade-up').forEach(el => el.classList.add('visible'));
+    }, 80);
   </script>
 
 </body>
