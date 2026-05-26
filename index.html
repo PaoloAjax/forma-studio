@@ -47,7 +47,8 @@
     .marquee-track span.dot { color: var(--terra); }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     section { padding: 5rem 3rem; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .cta-bar { margin: 0 auto 5rem; max-width: 1040px; }
+    .cta-outer { max-width: 1100px; margin: 0 auto; padding: 0 3rem 5rem; }
+    .cta-bar { background: var(--ink); border-radius: 8px; padding: 3.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
     footer { max-width: 1100px; margin: 0 auto; padding: 1.5rem 3rem; }
     .section-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.75rem; }
     .section-title { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); font-weight: 400; letter-spacing: -0.5px; line-height: 1.15; }
@@ -232,11 +233,13 @@
     </div>
   </section>
 
-  <div id="contact" class="cta-bar">
-    <div class="cta-text">Klaar om samen iets <em>bijzonders</em> te bouwen?</div>
-    <a href="mailto:paolo@byforma.nl">
-      <button class="btn-terra">Gesprek inplannen →</button>
-    </a>
+  <div id="contact" class="cta-outer">
+    <div class="cta-bar">
+      <div class="cta-text">Klaar om samen iets <em>bijzonders</em> te bouwen?</div>
+      <a href="mailto:paolo@byforma.nl">
+        <button class="btn-terra">Gesprek inplannen →</button>
+      </a>
+    </div>
   </div>
 
   <footer>
