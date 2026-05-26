@@ -64,11 +64,12 @@
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
     .about-body { font-size: 15px; color: var(--ink-soft); line-height: 1.8; font-weight: 300; }
     .about-body p + p { margin-top: 1rem; }
-    .about-stats { display: flex; flex-direction: column; }
-    .stat-row { padding: 1.25rem 0; border-bottom: 0.5px solid var(--border); }
-    .stat-row:first-child { border-top: 0.5px solid var(--border); }
-    .stat-num { font-family: var(--font-display); font-size: 40px; color: var(--terra); line-height: 1; }
-    .stat-desc { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+    .about-pillars { display: flex; flex-direction: column; gap: 0; }
+    .pillar { padding: 1.5rem 0; border-bottom: 0.5px solid var(--border); }
+    .pillar:first-child { border-top: 0.5px solid var(--border); }
+    .pillar-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .pillar-title span { color: var(--terra); font-size: 18px; }
+    .pillar-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; font-weight: 300; }
     .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 2.5rem; border: 0.5px solid var(--border); border-radius: 6px; overflow: hidden; }
     .process-step { padding: 1.75rem 1.5rem; border-right: 0.5px solid var(--border); background: white; }
     .process-step:last-child { border-right: none; }
@@ -180,22 +181,21 @@
         <h2 class="section-title" style="margin-bottom: 1.5rem;">Design met<br>een scherp oog<br>voor detail.</h2>
         <div class="about-body">
           <p>Ik ben Paolo — designer met een analytische achtergrond en een passie voor esthetiek. Ik maak geen generieke websites maar doordachte digitale ervaringen die passen bij jouw merk en doelgroep.</p>
-          <p>Geen groot bureau, geen roulerende contactpersonen. Jij werkt direct met mij samen — van het eerste gesprek tot de livegang.</p>
           <p>Met wortels in Italië en Nederland combineer ik Italiaanse esthetiek met Nederlandse nuchterheid. Dat zie je terug in elk project.</p>
         </div>
       </div>
-      <div class="about-stats">
-        <div class="stat-row">
-          <div class="stat-num">40+</div>
-          <div class="stat-desc">Projecten afgerond</div>
+      <div class="about-pillars">
+        <div class="pillar">
+          <div class="pillar-title"><span>→</span> Persoonlijk contact — altijd</div>
+          <div class="pillar-desc">Geen bureau, geen tussenpersonen. Jij werkt direct met mij samen, van het eerste gesprek tot de livegang.</div>
         </div>
-        <div class="stat-row">
-          <div class="stat-num">8 jr</div>
-          <div class="stat-desc">Ervaring in design & strategie</div>
+        <div class="pillar">
+          <div class="pillar-title"><span>→</span> Vaste prijs, geen verrassingen</div>
+          <div class="pillar-desc">Vooraf duidelijke afspraken over wat je krijgt en wat het kost. Geen verborgen kosten achteraf.</div>
         </div>
-        <div class="stat-row">
-          <div class="stat-num">100%</div>
-          <div class="stat-desc">Persoonlijk contact, altijd</div>
+        <div class="pillar">
+          <div class="pillar-title"><span>→</span> Van idee tot live in 2 weken</div>
+          <div class="pillar-desc">Geen maandenlange trajecten. Ik werk snel en efficiënt zodat jij zo snel mogelijk online staat.</div>
         </div>
       </div>
     </div>
